@@ -1,0 +1,36 @@
+package de.neuefische.spring_request_params.controller;
+
+
+import de.neuefische.spring_request_params.model.Student;
+import de.neuefische.spring_request_params.repo.StudentRepo;
+import de.neuefische.spring_request_params.service.StudentService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("student")
+public class StudentController {
+
+    private final StudentService studentService = new StudentService(new StudentRepo(new ArrayList<>()));
+
+    @GetMapping
+    public List<Student> listStudents(@RequestParam Optional<String> search) {
+        if (search.isPresent()) {
+            return studentService.search(search.get());
+        }
+        return studentService.list();
+    }
+
+    @PutMapping("{id}")
+    public Student addStudent(@RequestBody Student student) {
+        return studentService.addStudent(student);
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteStudent(@PathVariable String id) {
+        studentService.delete(id);
+    }
+}
