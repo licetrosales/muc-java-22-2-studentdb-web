@@ -2,11 +2,10 @@ package de.neuefische.spring_request_params.controller;
 
 
 import de.neuefische.spring_request_params.model.Student;
-import de.neuefische.spring_request_params.repo.StudentRepo;
 import de.neuefische.spring_request_params.service.StudentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +28,7 @@ public class StudentController {
         return studentService.list();
     }
 
-    @PutMapping("{id}")
+    @PostMapping("{id}")
     public Student addStudent(@RequestBody Student student) {
         return studentService.addStudent(student);
     }
