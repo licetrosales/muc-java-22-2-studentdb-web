@@ -1,12 +1,14 @@
 package de.neuefische.spring_request_params.repo;
 
 import de.neuefische.spring_request_params.model.Student;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Repository
 public class StudentRepo {
     private List<Student> students = new ArrayList<>();
 

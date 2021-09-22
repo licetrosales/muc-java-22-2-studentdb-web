@@ -14,7 +14,12 @@ import java.util.Optional;
 @RequestMapping("student")
 public class StudentController {
 
-    private final StudentService studentService = new StudentService();
+    private final StudentService studentService;
+
+    @Autowired
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping
     public List<Student> listStudents(@RequestParam Optional<String> search) {
