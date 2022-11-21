@@ -15,6 +15,7 @@ import static org.mockito.Mockito.*;
 
 class StudentServiceTest {
     private final StudentRepo studentRepo = mock(StudentRepo.class);
+    private final IdService idService = mock(IdService.class);
 
     @Test
     public void testListStudents() {
@@ -27,7 +28,7 @@ class StudentServiceTest {
                         new Student("4", "Marianne")
                 )
         );
-        StudentService studentService = new StudentService(studentRepo);
+        StudentService studentService = new StudentService(studentRepo, idService);
 
         //WHEN
         List<Student> actual = studentService.list();
@@ -52,7 +53,7 @@ class StudentServiceTest {
                         new Student("4", "Marianne")
                 )
         );
-        StudentService studentService = new StudentService(studentRepo);
+        StudentService studentService = new StudentService(studentRepo, idService);
 
         //WHEN
         List<Student> actual = studentService.search("Mari");
@@ -69,7 +70,7 @@ class StudentServiceTest {
         //GIVEN
         Student studentToAdd = new Student("5", "Hans");
         when(studentRepo.add(studentToAdd)).thenReturn(studentToAdd);
-        StudentService studentService = new StudentService(studentRepo);
+        StudentService studentService = new StudentService(studentRepo, idService);
 
         //WHEN
         Student actual = studentService.addStudent(studentToAdd);
@@ -83,7 +84,7 @@ class StudentServiceTest {
     public void testFindById() {
         //GIVEN
         when(studentRepo.findById("2")).thenReturn(Optional.of(new Student("2", "Maria")));
-        StudentService studentService = new StudentService(studentRepo);
+        StudentService studentService = new StudentService(studentRepo, idService);
 
         //WHEN
         Student actual = studentService.findById("2");
@@ -96,7 +97,7 @@ class StudentServiceTest {
     public void testFindByIdWithNotExistingId() {
         //GIVEN
         when(studentRepo.findById("9")).thenReturn(Optional.empty());
-        StudentService studentService = new StudentService(studentRepo);
+        StudentService studentService = new StudentService(studentRepo, idService);
 
         //WHEN
         try {
@@ -112,7 +113,7 @@ class StudentServiceTest {
     public void testDelete() {
         //GIVEN
         when(studentRepo.findById("2")).thenReturn(Optional.of(new Student("2", "Maria")));
-        StudentService studentService = new StudentService(studentRepo);
+        StudentService studentService = new StudentService(studentRepo, idService);
 
         //WHEN
         studentService.delete("2");
@@ -122,5 +123,21 @@ class StudentServiceTest {
 
     }
 
+    @Test
+    public void testAddStudentWithRandomId() {
+        //GIVEN
+        Student studentToAdd = new Student(null, "Hans");
+        Student addedStudent = new Student("7abc", "Hans");
 
+        when(idService.generateId()).thenReturn("7abc");
+        when(studentRepo.add(addedStudent)).thenReturn(addedStudent);
+        StudentService studentService = new StudentService(studentRepo, idService);
+
+        //WHEN
+        Student actual = studentService.addStudent(studentToAdd);
+
+        //THEN
+        assertThat(actual, is(studentToAdd));
+        verify(studentRepo).add(studentToAdd);
+    }
 }

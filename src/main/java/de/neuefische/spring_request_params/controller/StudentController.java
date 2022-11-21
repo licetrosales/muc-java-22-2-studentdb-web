@@ -28,7 +28,12 @@ public class StudentController {
         return studentService.list();
     }
 
-    @PostMapping("{id}")
+    @GetMapping("{id}")
+    public Student getStudent(@PathVariable String id) {
+        return studentService.findById(id);
+    }
+
+    @PostMapping()
     public Student addStudent(@RequestBody Student student) {
         return studentService.addStudent(student);
     }

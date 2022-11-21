@@ -13,10 +13,12 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepo studentRepo;
+    private final IdService idService;
 
     @Autowired
-    public StudentService(StudentRepo studentRepo) {
+    public StudentService(StudentRepo studentRepo, IdService idService) {
         this.studentRepo = studentRepo;
+        this.idService = idService;
     }
 
     public List<Student> list() {
@@ -31,6 +33,7 @@ public class StudentService {
     }
 
     public Student addStudent(Student student) {
+        student.setId(idService.generateId());
         return studentRepo.add(student);
     }
 
